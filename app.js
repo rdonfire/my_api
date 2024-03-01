@@ -38,6 +38,7 @@ process.on('SIGINT', () => {
     connection.end();
     process.exit();
 });
+ /*
 
 // Middleware para analisar solicitações com corpo JSON
 app.use(bodyParser.json());
@@ -64,3 +65,4 @@ app.post('/api/users', (req, res) => {
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`Servidor rodando no arquivo app.js em http://localhost:${PORT}`);
 });
+*/
