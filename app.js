@@ -1,10 +1,9 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const mysql = require('mysql');
 
 const app = express();
 const PORT = 3000;
-
-const mysql = require('mysql2');
 
 const connection = mysql.createConnection({
     host: 'localhost',
@@ -40,8 +39,6 @@ process.on('SIGINT', () => {
     process.exit();
 });
 
-
-/* 
 // Middleware para analisar solicitações com corpo JSON
 app.use(bodyParser.json());
 
@@ -67,5 +64,3 @@ app.post('/api/users', (req, res) => {
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`Servidor rodando no arquivo app.js em http://localhost:${PORT}`);
 });
-
-*/
