@@ -62,7 +62,7 @@ app.post('/api/addbarbeiros', (req, res) => {
 });
 
 app.get('/api/barbeiros', (req, res) => {
-    const query = 'SELECT * FROM barbers'; // Consulta SQL para buscar todos os barbeiros
+    const query = 'SELECT * FROM barbers;'; // Consulta SQL para buscar todos os barbeiros
     connection.query(query, (err, result) => { // Não é necessário passar parâmetros
         if (err) {
             console.error('Erro ao buscar barbeiros:', err);
