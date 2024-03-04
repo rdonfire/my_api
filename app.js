@@ -1,85 +1,63 @@
 const express = require('express');
-const bodyParser = require('body-parser');
 const mysql = require('mysql');
 
 const app = express();
-const PORT = 3000;
+const port = 3000; // Porta em que a API será executada
 
+// Configuração da conexão com o banco de dados
 const connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '1234',
-    database: 'eydos' // Nome do seu banco de dados
+  host: 'localhost',
+  user: 'root',
+  password: '1234',
+  database: 'eydos'
 });
 
 // Conectar ao banco de dados
 connection.connect((err) => {
+  if (err) {
+    console.error('Erro ao conectar ao banco de dados:', err);
+    return;
+  }
+  console.log('Conexão bem-sucedida ao banco de dados MySQL 100% atualizado');
+});
+
+// Rota para recuperar os dados da tabela 'barbers'
+app.get('/barbers', (req, res) => {
+  connection.query('SELECT * FROM barbers', (err, results) => {
     if (err) {
-        console.error('Erro ao conectar ao banco de dados:', err);
-        return;
+      console.error('Erro ao executar a consulta:', err);
+      res.status(500).send('Erro ao recuperar dados da tabela barbers');
+      return;
     }
-    console.log('Conexão bem-sucedida ao banco de dados MySQL');
+    res.json(results);
+  });
 });
 
-app.post('/api/addclientes', (req, res) =>{
-    const {nome, telefone } = req.body;
-    const query = 'INSERT INTO clientes (nome, telefone) VALUES (?,?)';
-    connection.query(query, [nome, telefone], (err,result) => {
-        if(err) {
-            console.error('Erro ao adicionar cliente: ', err);
-            res.status(500).json({error: 'Erro interno do Servidor' });
-            return;
-        }
-        res.status(201).json({ ud: result.insertId, nome, telefone});
-    });    
-    
-}); 
-
-app.post('/api/addservicos', (req, res) => {
-    const { servico, preco } = req.body;
-    const query = 'INSERT INTO servicos (servico, preco) VALUES (?, ?)';
-    connection.query(query, [servico, preco], (err, result) => {
-        if (err) {
-            console.error('Erro ao adicionar serviço:', err);
-            res.status(500).json({ error: 'Erro interno do servidor' });
-            return;
-        }
-        res.status(201).json({ id: result.insertId, servico, preco });
-    });
+// Rota para recuperar os dados da tabela 'clientes'
+app.get('/clientes', (req, res) => {
+  connection.query('SELECT * FROM clientes', (err, results) => {
+    if (err) {
+      console.error('Erro ao executar a consulta:', err);
+      res.status(500).send('Erro ao recuperar dados da tabela clientes');
+      return;
+    }
+    res.json(results);
+  });
 });
 
-app.post('/api/addbarbeiros', (req, res) => {
-    const { nome } = req.body;
-    const query = 'INSERT INTO barbers (nome) VALUES (?)';
-    connection.query(query, [nome], (err, result) => {
-        if (err) {
-            console.error('Erro ao adicionar barbeiro:', err);
-            res.status(500).json({ error: 'Erro interno do servidor' });
-            return;
-        }
-        res.status(201).json({ id: result.insertId, nome });
-    });
+// Rota para recuperar os dados da tabela 'servicos'
+app.get('/servicos', (req, res) => {
+  connection.query('SELECT * FROM servicos', (err, results) => {
+    if (err) {
+      console.error('Erro ao executar a consulta:', err);
+      res.status(500).send('Erro ao recuperar dados da tabela servicos');
+      return;
+    }
+    res.json(results);
+  });
 });
 
-app.get('/api/barbeiros', (req, res) => {
-    const query = 'SELECT * FROM barbers;'; // Consulta SQL para buscar todos os barbeiros
-    connection.query(query, (err, result) => { // Não é necessário passar parâmetros
-        if (err) {
-            console.error('Erro ao buscar barbeiros:', err);
-            res.status(500).json({ error: 'Erro interno do servidor' });
-            return;
-        }
-        res.status(200).json(result); // Enviar os dados dos barbeiros encontrados
-    });
+// Iniciar o servidor
+app.listen(port, () => {
+  console.log(`API está rodando em http://localhost:${port}`);
 });
-
-
-
-
-
-// Encerrar a conexão com o banco de dados quando a aplicação é encerrada
-process.on('SIGINT', () => {
-    connection.end();
-    process.exit();
-});
- 
